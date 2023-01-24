@@ -42,3 +42,39 @@ nav {
 .category:last-child {
     border-radius: 0 10px 10px 0;
 }
+
+.whois {
+    background-color: #303030;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+}
+.mainbird {
+    border-radius: 10px;
+    margin-right: 30px;
+}
+.name {
+    color: #fff;
+    font-size: 32px;
+}
+.divider {
+    height: 1px;
+    width: 100%;
+    background-color: #555555;
+}
+.playBtn {
+    position: relative;
+    width: 50px;
+}
+.playBtn::before {
+    position: absolute;
+    content: "";
+    width: 50px;
+    height: 50px;
+    top: -20%;
+    left: -10%;
+    border-radius: 50%;
+    border: 5px solid #00BC8C;
+}
