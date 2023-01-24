@@ -1,0 +1,44 @@
+* {
+    font-family: 'Roboto', sans-serif;
+}
+.container {
+    width: 1100px;
+    margin: 0 auto;
+}
+body {
+    background-color: #222;
+}
+.logo {
+    font-family: 'Caveat', cursive;
+    font-size: 48px;
+    color: #fff;
+}
+.score-title {
+    font-size: 24px;
+    color: #fff;
+}
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.categories {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+}
+.category {
+    background-color: green;
+    color: #fff;
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.active {
+    background-color: rgb(51, 142, 51);
+}
+.category:first-child {
+    border-radius: 10px 0 0 10px;
+}
+.category:last-child {
+    border-radius: 0 10px 10px 0;
+}
