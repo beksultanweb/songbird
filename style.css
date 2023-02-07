@@ -68,7 +68,7 @@ nav {
 }
 .playBtn {
     position: relative;
-    width: 50px;
+    width: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -152,11 +152,13 @@ button {
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background-color:red;
+    background-color:#444444;
     position: absolute;
+    top: -5px;
 }
 .time_info {
     position: absolute;
+    margin-top: 10px;
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -166,8 +168,9 @@ button {
     width: 100%;
     height: 8px;
 }
-.media {
+.audio_player {
     display: flex;
     align-items: center;
     gap: 20px;
+    margin-top: 40px;
 }
