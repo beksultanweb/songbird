@@ -315,7 +315,12 @@ let randomBird = () => {
   audioPlayer.appendChild(audio);
 
   audio.setAttribute('src', birdsData[0][randomNumber].audio);
+  listItems = document.querySelectorAll('li')
+  console.log(listItems)
 
+  birdsVar = birdsData[0].map(bird => bird.name)
+  // listItems.forEach(li => li.innerHTML = birdsVar.forEach(bird => bird))
+  console.log(birdsVar.forEach(bird => bird))
 }
 
 randomBird()
@@ -323,7 +328,31 @@ randomBird()
 var playBtn = document.querySelector('.playBtn')
 var audio = document.querySelector('audio')
 
+let flag = 0
+
 playBtn.addEventListener('click', function() {
-  audio.play()
-  playBtn.innerHTML = pauseSVG;
+  if(flag === 0) {
+    audio.play()
+    playBtn.innerHTML = pauseSVG
+    flag = 1
+  }
+  else if(flag === 1) {
+    audio.pause()
+    playBtn.innerHTML = playSVG
+    flag = 0
+  }
+
+  let duration = document.querySelector('.duration')
+  console.log(audio.duration)
+
+  let res = ''
+
+  res += '0' + Math.floor(audio.duration / 60) + ':'
+
+  if(Math.floor(audio.duration % 60) < 10) {
+    res += '0'
+  }
+  res += Math.floor(audio.duration % 60)
+
+  duration.innerHTML = res
 })
