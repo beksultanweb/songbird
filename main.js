@@ -374,6 +374,8 @@ playBtn.addEventListener('click', function() {
 })
 
 let listItems = document.querySelectorAll('li')
+listItems.forEach(li => li.style.setProperty('--background', '#444444')) //
+
 
 listItems.forEach(li => {
   li.addEventListener('click', function() {
@@ -381,12 +383,31 @@ listItems.forEach(li => {
       let audio = document.createElement('audio')
       audio.setAttribute('src', './karlson_na_sms.mp3')
       audio.play()
-      getComputedStyle(this, ':before').style.color = "red"
+      this.style.setProperty('--background', 'green') //
+      initCard(this.innerHTML)
+      correctAnswer()
     }
     else {
       let audio = document.createElement('audio')
       audio.setAttribute('src', './ne_prav.mp3')
       audio.play()
+      this.style.setProperty('--background', 'red') //
+      initCard(this.innerHTML)
     }
   })
 })
+
+
+let correctAnswer = () => {
+  document.querySelectorAll('.name')[0].innerHTML = birdsData[0][randomNumber].name
+  document.querySelectorAll('.mainbird')[0].src = birdsData[0][randomNumber].image
+}
+
+let initCard = (current) => {
+  document.querySelector('.bird_head').style.display = "flex"
+  document.querySelector('.init_text').style.display = "none"
+  document.querySelectorAll('.name')[1].innerHTML = birdsData[0].filter(bird => bird.name === current)[0].name
+  document.querySelector('#bird_img').src = birdsData[0].filter(bird => bird.name === current)[0].image
+  document.querySelector('.species').innerHTML = birdsData[0].filter(bird => bird.name === current)[0].species
+  document.querySelector('.descr').innerHTML = birdsData[0].filter(bird => bird.name === current)[0].description
+}
