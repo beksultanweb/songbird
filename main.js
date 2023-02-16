@@ -301,113 +301,145 @@ const birdsData = [
     ]
   ];
 
+let mistake = 5
+let score = 0
+let level = 0
+let disabled = true
+
 let playSVG = '<svg viewBox="-200 0 1200 1000"><path fill="#00bc8c" d="M96.51 11.97c-31.23 8.05-53.26 32.76-63.42 71.27-3.45 12.84-3.64 29.7-3.64 416.71s.19 403.87 3.64 416.71c16.09 60.74 61.69 86.03 120.9 67.25 9-2.87 53.65-25.1 116.49-58.24 56.14-29.51 221.29-116.3 367.28-192.93 145.99-76.64 271.29-143.31 278.38-148.1 39.28-25.68 59.59-63.04 53.26-97.52-4.79-26.63-24.33-53.07-52.88-71.65C892 399.37 172.58 22.32 154.95 16.38c-18.97-6.33-43.3-8.24-58.44-4.41z"></path></svg>'
 let pauseSVG = '<svg viewBox="0 0 47.607 47.607"><path fill="#00bc8c" d="M17.991 40.976a6.631 6.631 0 01-13.262 0V6.631a6.631 6.631 0 0113.262 0v34.345zM42.877 40.976a6.631 6.631 0 01-13.262 0V6.631a6.631 6.631 0 0113.262 0v34.345z"></path></svg>'
 
 let randomNumber
+let listItems = document.querySelectorAll('li')
 
-let randomBird = () => {
-  randomNumber = Math.floor(Math.random() * birdsData[0].length)
-
-  var audio = document.createElement('audio');
-  var playBtn = document.querySelector('.playBtn')
-  playBtn.insertAdjacentHTML( 'beforeend', playSVG );
-
-  var audioPlayer = document.querySelector('.audio_player');
-  audioPlayer.appendChild(audio);
-
-  audio.setAttribute('src', birdsData[0][randomNumber].audio);
-
-  var listItems = document.querySelectorAll('li')
-  birdsVar = birdsData[0].map(bird => bird.name)
-  for(let i = 0; i<birdsVar.length; i++) {
-    listItems[i].innerHTML = birdsVar[i]
+let initLevel = () => {
+  let randomBird = () => {
+    randomNumber = Math.floor(Math.random() * birdsData[level].length)
+    var audio = document.createElement('audio');
+    var playBtn = document.querySelector('.playBtn')
+    playBtn.insertAdjacentHTML( 'beforeend', playSVG );
+    var audioPlayer = document.querySelector('.audio_player');
+    audioPlayer.appendChild(audio);
+  
+    audio.setAttribute('src', birdsData[level][randomNumber].audio);
+  
+    var listItems = document.querySelectorAll('li')
+    birdsVar = birdsData[level].map(bird => bird.name)
+    for(let i = 0; i<birdsVar.length; i++) {
+      listItems[i].innerHTML = birdsVar[i]
+    }
   }
+  
+  randomBird()
+  
+  var playBtn = document.querySelector('.playBtn')
+  var audio = document.querySelector('audio')
+  
+  let flag = 0
+  
+  playBtn.addEventListener('click', function() {
+    if(flag === 0) {
+      audio.play()
+      playBtn.innerHTML = pauseSVG
+      flag = 1
+    }
+    else if(flag === 1) {
+      audio.pause()
+      playBtn.innerHTML = playSVG
+      flag = 0
+    }
+  
+    let circle = document.querySelector('.circle')
+    let timeBar = document.querySelector('.time_bar').offsetWidth
+    let duration = document.querySelector('.duration')
+    let durTime = Math.floor(audio.duration)
+    
+  //   function progress(timeleft, timetotal, $element) {
+  //     var progressBarWidth = timeleft * $element.width() / timetotal;
+  //     $element.find('div').animate({ width: progressBarWidth }, 500).html(Math.floor(timeleft/60) + ":"+ timeleft%60);
+  //     if(timeleft > 0) {
+  //         setTimeout(function() {
+  //             progress(timeleft - 1, timetotal, $element);
+  //         }, 1000);
+  //     }
+  // };
+  
+  // progress(60, 60, $('#progressBar'));
+  
+    let res = ''
+  
+    res += '0' + Math.floor(audio.duration / 60) + ':'
+  
+    if(Math.floor(audio.duration % 60) < 10) {
+      res += '0'
+    }
+    res += Math.floor(audio.duration % 60)
+  
+    duration.innerHTML = res
+  })
+  listItems.forEach(li => li.style.setProperty('--background', '#444444')) //
 }
 
-randomBird()
-
-var playBtn = document.querySelector('.playBtn')
-var audio = document.querySelector('audio')
-
-let flag = 0
-
-playBtn.addEventListener('click', function() {
-  if(flag === 0) {
-    audio.play()
-    playBtn.innerHTML = pauseSVG
-    flag = 1
-  }
-  else if(flag === 1) {
-    audio.pause()
-    playBtn.innerHTML = playSVG
-    flag = 0
-  }
-
-  let circle = document.querySelector('.circle')
-  let timeBar = document.querySelector('.time_bar').offsetWidth
-  let duration = document.querySelector('.duration')
-  let durTime = Math.floor(audio.duration)
-  
-//   function progress(timeleft, timetotal, $element) {
-//     var progressBarWidth = timeleft * $element.width() / timetotal;
-//     $element.find('div').animate({ width: progressBarWidth }, 500).html(Math.floor(timeleft/60) + ":"+ timeleft%60);
-//     if(timeleft > 0) {
-//         setTimeout(function() {
-//             progress(timeleft - 1, timetotal, $element);
-//         }, 1000);
-//     }
-// };
-
-// progress(60, 60, $('#progressBar'));
-
-  let res = ''
-
-  res += '0' + Math.floor(audio.duration / 60) + ':'
-
-  if(Math.floor(audio.duration % 60) < 10) {
-    res += '0'
-  }
-  res += Math.floor(audio.duration % 60)
-
-  duration.innerHTML = res
-})
-
-let listItems = document.querySelectorAll('li')
-listItems.forEach(li => li.style.setProperty('--background', '#444444')) //
-
-
-listItems.forEach(li => {
-  li.addEventListener('click', function() {
-    if(this.innerHTML === birdsData[0][randomNumber].name) {
-      let audio = document.createElement('audio')
-      audio.setAttribute('src', './karlson_na_sms.mp3')
-      audio.play()
-      this.style.setProperty('--background', 'green') //
-      initCard(this.innerHTML)
-      correctAnswer()
-    }
-    else {
-      let audio = document.createElement('audio')
-      audio.setAttribute('src', './ne_prav.mp3')
-      audio.play()
-      this.style.setProperty('--background', 'red') //
-      initCard(this.innerHTML)
-    }
-  })
-})
-
+document.querySelector('button').disabled = true
 
 let correctAnswer = () => {
-  document.querySelectorAll('.name')[0].innerHTML = birdsData[0][randomNumber].name
-  document.querySelectorAll('.mainbird')[0].src = birdsData[0][randomNumber].image
+  document.querySelectorAll('.name')[0].innerHTML = birdsData[level][randomNumber].name
+  document.querySelectorAll('.mainbird')[0].src = birdsData[level][randomNumber].image
 }
 
 let initCard = (current) => {
   document.querySelector('.bird_head').style.display = "flex"
   document.querySelector('.init_text').style.display = "none"
-  document.querySelectorAll('.name')[1].innerHTML = birdsData[0].filter(bird => bird.name === current)[0].name
-  document.querySelector('#bird_img').src = birdsData[0].filter(bird => bird.name === current)[0].image
-  document.querySelector('.species').innerHTML = birdsData[0].filter(bird => bird.name === current)[0].species
-  document.querySelector('.descr').innerHTML = birdsData[0].filter(bird => bird.name === current)[0].description
+  document.querySelectorAll('.name')[1].innerHTML = birdsData[level].filter(bird => bird.name === current)[0].name
+  document.querySelector('#bird_img').src = birdsData[level].filter(bird => bird.name === current)[0].image
+  document.querySelector('.species').innerHTML = birdsData[level].filter(bird => bird.name === current)[0].species
+  document.querySelector('.descr').innerHTML = birdsData[level].filter(bird => bird.name === current)[0].description
 }
+
+listItems.forEach(li => {
+  li.addEventListener('click', function() {
+    this.style.pointerEvents = "none";
+    if(this.innerHTML === birdsData[level][randomNumber].name) {
+      let audio = document.createElement('audio')
+      audio.setAttribute('src', './karlson_na_sms.mp3')
+      audio.play()
+      this.style.setProperty('--background', 'green')
+      initCard(this.innerHTML)
+      correctAnswer()
+      document.querySelector('button').disabled = false
+      document.querySelector('button').style.backgroundColor = 'green'
+      score += mistake
+      document.querySelector('.score').innerHTML = score
+    }
+    else {
+      console.log('не прав')
+      let audio = document.createElement('audio')
+      audio.setAttribute('src', './ne_prav.mp3')
+      audio.play()
+      this.style.setProperty('--background', 'red')
+      initCard(this.innerHTML)
+      mistake--
+      console.log(mistake)
+    }
+  })
+})
+
+initLevel()
+
+document.querySelector('button').addEventListener('click', function() {
+  listItems.forEach(li => {
+    li.style.pointerEvents = "auto"
+  })
+  mistake = 5
+  level++
+  initLevel()
+  document.querySelector('button').disabled = true
+  document.querySelector('.init_text').style.display = "block"
+  document.querySelector('.bird_head').style.display = "none"
+  document.querySelector('.descr').innerHTML = ""
+  document.querySelectorAll('.mainbird')[0].src = './bird.06a46938.jpg'
+  document.querySelectorAll('.name')[0].innerHTML = '*****'
+  document.querySelectorAll('.category')[level].classList.add('active')
+  document.querySelectorAll('.category')[level-1].classList.remove('active')
+  document.querySelector('button').style.backgroundColor = '#303030'
+})
