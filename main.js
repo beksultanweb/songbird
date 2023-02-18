@@ -412,14 +412,12 @@ listItems.forEach(li => {
       document.querySelector('.score').innerHTML = score
     }
     else {
-      console.log('не прав')
       let audio = document.createElement('audio')
       audio.setAttribute('src', './ne_prav.mp3')
       audio.play()
       this.style.setProperty('--background', 'red')
       initCard(this.innerHTML)
       mistake--
-      console.log(mistake)
     }
   })
 })
@@ -432,14 +430,45 @@ document.querySelector('button').addEventListener('click', function() {
   })
   mistake = 5
   level++
-  initLevel()
-  document.querySelector('button').disabled = true
-  document.querySelector('.init_text').style.display = "block"
-  document.querySelector('.bird_head').style.display = "none"
-  document.querySelector('.descr').innerHTML = ""
-  document.querySelectorAll('.mainbird')[0].src = './bird.06a46938.jpg'
-  document.querySelectorAll('.name')[0].innerHTML = '*****'
-  document.querySelectorAll('.category')[level].classList.add('active')
-  document.querySelectorAll('.category')[level-1].classList.remove('active')
-  document.querySelector('button').style.backgroundColor = '#303030'
+  gameEnd()
+  if(level === birdsData.length) gameEnd()
+  else {
+    initLevel()
+    document.querySelector('button').disabled = true
+    document.querySelector('.init_text').style.display = "block"
+    document.querySelector('.bird_head').style.display = "none"
+    document.querySelector('.descr').innerHTML = ""
+    document.querySelectorAll('.mainbird')[0].src = './bird.06a46938.jpg'
+    document.querySelectorAll('.name')[0].innerHTML = '*****'
+    document.querySelectorAll('.category')[level].classList.add('active')
+    document.querySelectorAll('.category')[level-1].classList.remove('active')
+    document.querySelector('button').style.backgroundColor = '#303030'
+  }
 })
+
+let gameEnd = () => {
+  document.querySelector('.answer').style.display = "none"
+  document.querySelector('button').style.display = "none"
+  let whois = document.querySelector('.whois').children
+  console.log(whois)
+  for(let i=0; i<whois.length; i++) {
+    whois[i].style.display = "none"
+  }
+  let finalText = document.createElement('div')
+  finalText.innerHTML = 'Вы прошли викторину и набрали ' + score + ' из '+ birdsData.length * 5
+  let grats = document.createElement('div')
+  grats.innerHTML = "Поздравляем!"
+  let button = document.createElement('button')
+  button.innerHTML = "Попробовать ещё раз"
+  document.querySelector('.whois').style.display = "flex"
+  document.querySelector('.whois').style.alignItems = "center"
+  document.querySelector('.whois').style.flexDirection = "column"
+  document.querySelector('.whois').appendChild(grats)
+  document.querySelector('.whois').appendChild(finalText)
+  document.querySelector('.whois').appendChild(button)
+  button.addEventListener('click', function() {
+    console.log('test')
+    level = 0
+    initLevel()
+  })
+}
