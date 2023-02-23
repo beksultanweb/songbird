@@ -388,6 +388,7 @@ let correctAnswer = () => {
 }
 
 let initCard = (current) => {
+  // let audio = document.createElement('audio')
   document.querySelector('.bird_head').style.display = "flex"
   document.querySelector('.init_text').style.display = "none"
   document.querySelectorAll('.name')[1].innerHTML = birdsData[level].filter(bird => bird.name === current)[0].name
@@ -396,28 +397,39 @@ let initCard = (current) => {
   document.querySelector('.descr').innerHTML = birdsData[level].filter(bird => bird.name === current)[0].description
 }
 
+let audioPlay = false, clickedAr = []
+
 listItems.forEach(li => {
   li.addEventListener('click', function() {
-    this.style.pointerEvents = "none";
+    // this.style.pointerEvents = "none";
     if(this.innerHTML === birdsData[level][randomNumber].name) {
       let audio = document.createElement('audio')
       audio.setAttribute('src', './karlson_na_sms.mp3')
-      audio.play()
+      if(!audioPlay) { //работает когда false
+        audio.play()
+        score += mistake
+      }
       this.style.setProperty('--background', 'green')
       initCard(this.innerHTML)
       correctAnswer()
       document.querySelector('button').disabled = false
       document.querySelector('button').style.backgroundColor = 'green'
-      score += mistake
       document.querySelector('.score').innerHTML = score
+      audioPlay = true
     }
     else {
       let audio = document.createElement('audio')
       audio.setAttribute('src', './ne_prav.mp3')
-      audio.play()
-      this.style.setProperty('--background', 'red')
+      if(!audioPlay) {
+        if(!clickedAr.includes(this.innerHTML)) mistake--
+        //Минусует когда, когда его нету в массиве "нажатых"
+        clickedAr.push(this.innerHTML)
+        //заносит в массив те, на которые нажал
+        audio.play()
+        this.style.setProperty('--background', 'red')
+      }
+
       initCard(this.innerHTML)
-      mistake--
     }
   })
 })
@@ -425,9 +437,10 @@ listItems.forEach(li => {
 initLevel()
 
 document.querySelector('button').addEventListener('click', function() {
-  listItems.forEach(li => {
-    li.style.pointerEvents = "auto"
-  })
+  // listItems.forEach(li => {
+  //   li.style.pointerEvents = "auto"
+  // })
+  audioPlay = false
   mistake = 5
   level++
   gameEnd()
@@ -450,25 +463,42 @@ let gameEnd = () => {
   document.querySelector('.answer').style.display = "none"
   document.querySelector('button').style.display = "none"
   let whois = document.querySelector('.whois').children
-  console.log(whois)
   for(let i=0; i<whois.length; i++) {
     whois[i].style.display = "none"
   }
   let finalText = document.createElement('div')
-  finalText.innerHTML = 'Вы прошли викторину и набрали ' + score + ' из '+ birdsData.length * 5
+  finalText.className = "finalText"
+  finalText.innerHTML = 'Вы прошли викторину и набрали ' + score + ' из '+ birdsData.length * 5 + ' возможных баллов'
   let grats = document.createElement('div')
+  grats.className = "grats"
   grats.innerHTML = "Поздравляем!"
   let button = document.createElement('button')
   button.innerHTML = "Попробовать ещё раз"
+  button.className = "repeat"
   document.querySelector('.whois').style.display = "flex"
   document.querySelector('.whois').style.alignItems = "center"
   document.querySelector('.whois').style.flexDirection = "column"
   document.querySelector('.whois').appendChild(grats)
   document.querySelector('.whois').appendChild(finalText)
   document.querySelector('.whois').appendChild(button)
-  button.addEventListener('click', function() {
-    console.log('test')
-    level = 0
-    initLevel()
-  })
+
+  button.onclick = newGame
+  bind(button)
+}
+
+let newGame = () => {
+  document.querySelector('.grats').style.display = "none"
+  document.querySelector('.finalText').style.display = "none"
+  document.querySelector('.answer').style.display = "flex"
+  document.querySelector('button').style.display = "inline"
+  let whois = document.querySelector('.whois').children
+  for(let i=0; i<whois.length; i++) {
+    whois[i].style.display = "block"
+  }
+  level = 0
+  initLevel()
+}
+
+let bind = function(item) {
+  item.document.querySelector('.repeat').disabled = false
 }
