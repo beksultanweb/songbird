@@ -313,16 +313,13 @@ let randomNumber
 let listItems = document.querySelectorAll('li')
 
 let initLevel = () => {
+  document.querySelector('.score').innerHTML = score
   let randomBird = () => {
     randomNumber = Math.floor(Math.random() * birdsData[level].length)
-    var audio = document.createElement('audio');
+
     var playBtn = document.querySelector('.playBtn')
     playBtn.insertAdjacentHTML( 'beforeend', playSVG );
-    var audioPlayer = document.querySelector('.audio_player');
-    audioPlayer.appendChild(audio);
-  
-    audio.setAttribute('src', birdsData[level][randomNumber].audio);
-  
+
     var listItems = document.querySelectorAll('li')
     birdsVar = birdsData[level].map(bird => bird.name)
     for(let i = 0; i<birdsVar.length; i++) {
@@ -331,7 +328,9 @@ let initLevel = () => {
   }
   
   randomBird()
-  
+  let myAudio = document.querySelector('.audio1')
+  myAudio.setAttribute('src', birdsData[level][randomNumber].audio);
+
   var playBtn = document.querySelector('.playBtn')
   var audio = document.querySelector('audio')
   
@@ -412,8 +411,8 @@ listItems.forEach(li => {
       this.style.setProperty('--background', 'green')
       initCard(this.innerHTML)
       correctAnswer()
-      document.querySelector('button').disabled = false
-      document.querySelector('button').style.backgroundColor = 'green'
+      document.querySelector('.next').disabled = false
+      document.querySelector('.next').style.backgroundColor = 'green'
       document.querySelector('.score').innerHTML = score
       audioPlay = true
     }
@@ -436,18 +435,18 @@ listItems.forEach(li => {
 
 initLevel()
 
-document.querySelector('button').addEventListener('click', function() {
+document.querySelector('.next').addEventListener('click', function() {
   // listItems.forEach(li => {
   //   li.style.pointerEvents = "auto"
   // })
   audioPlay = false
   mistake = 5
   level++
-  gameEnd()
+  if(level === 3) gameEnd()
   if(level === birdsData.length) gameEnd()
   else {
     initLevel()
-    document.querySelector('button').disabled = true
+    document.querySelector('.next').disabled = true
     document.querySelector('.init_text').style.display = "block"
     document.querySelector('.bird_head').style.display = "none"
     document.querySelector('.descr').innerHTML = ""
@@ -455,13 +454,13 @@ document.querySelector('button').addEventListener('click', function() {
     document.querySelectorAll('.name')[0].innerHTML = '*****'
     document.querySelectorAll('.category')[level].classList.add('active')
     document.querySelectorAll('.category')[level-1].classList.remove('active')
-    document.querySelector('button').style.backgroundColor = '#303030'
+    document.querySelector('.next').style.backgroundColor = '#303030'
   }
 })
 
 let gameEnd = () => {
   document.querySelector('.answer').style.display = "none"
-  document.querySelector('button').style.display = "none"
+  document.querySelector('.next').style.display = "none"
   let whois = document.querySelector('.whois').children
   for(let i=0; i<whois.length; i++) {
     whois[i].style.display = "none"
@@ -482,23 +481,30 @@ let gameEnd = () => {
   document.querySelector('.whois').appendChild(finalText)
   document.querySelector('.whois').appendChild(button)
 
-  button.onclick = newGame
-  bind(button)
+  button.onclick = newGame //По нажатию на кнопку вызывается функция
 }
 
 let newGame = () => {
-  document.querySelector('.grats').style.display = "none"
-  document.querySelector('.finalText').style.display = "none"
-  document.querySelector('.answer').style.display = "flex"
-  document.querySelector('button').style.display = "inline"
   let whois = document.querySelector('.whois').children
   for(let i=0; i<whois.length; i++) {
     whois[i].style.display = "block"
   }
-  level = 0
-  initLevel()
-}
+  document.querySelector('.init_text').style.display = "block"
+  document.querySelector('.descr').innerHTML = ""
+  document.querySelectorAll('.mainbird')[0].src = './bird.06a46938.jpg'
+  document.querySelectorAll('.name')[0].innerHTML = '*****'
 
-let bind = function(item) {
-  item.document.querySelector('.repeat').disabled = false
+  document.querySelector('.grats').style.display = "none"
+  document.querySelector('.finalText').style.display = "none"
+  document.querySelector('.answer').style.display = "flex"
+  document.querySelector('.next').style.display = "block"
+  document.querySelector('.whois').style.display = "grid"
+  document.querySelector('.whois').style.gridTemplateColumns = "max-content 1fr"
+  document.querySelector('.repeat').style.display = "none"
+  level = 0
+  document.querySelectorAll('.category').forEach(cat => cat.classList.remove('active'))
+  document.querySelectorAll('.category')[level].classList.add('active')
+  score = 0
+  mistake = 5
+  initLevel()
 }
