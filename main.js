@@ -312,14 +312,16 @@ let pauseSVG = '<svg viewBox="0 0 47.607 47.607"><path fill="#00bc8c" d="M17.991
 let randomNumber
 let listItems = document.querySelectorAll('li')
 
+var playBtn = document.querySelector('.playBtn')
+    playBtn.insertAdjacentHTML( 'beforeend', playSVG );
+
+var playBtn2 = document.querySelector('.playBtn2')
+    playBtn2.insertAdjacentHTML( 'beforeend', playSVG );
+
 let initLevel = () => {
   document.querySelector('.score').innerHTML = score
   let randomBird = () => {
     randomNumber = Math.floor(Math.random() * birdsData[level].length)
-
-    var playBtn = document.querySelector('.playBtn')
-    playBtn.insertAdjacentHTML( 'beforeend', playSVG );
-
     var listItems = document.querySelectorAll('li')
     birdsVar = birdsData[level].map(bird => bird.name)
     for(let i = 0; i<birdsVar.length; i++) {
@@ -327,15 +329,30 @@ let initLevel = () => {
     }
   }
   
-  randomBird()
+  randomBird() //Формирует рандомное число
   let myAudio = document.querySelector('.audio1')
-  myAudio.setAttribute('src', birdsData[level][randomNumber].audio);
+  myAudio.setAttribute('src', birdsData[level][randomNumber].audio); //Подставляет
 
   var playBtn = document.querySelector('.playBtn')
-  var audio = document.querySelector('audio')
+  var audio = document.querySelector('.audio1')
+  var playBtn2 = document.querySelector('.playBtn2')
+  var audio2 = document.querySelector('.audio2')
   
   let flag = 0
-  
+
+  playBtn2.addEventListener('click', function() {
+    if(flag === 0) {
+      audio2.play()
+      playBtn2.innerHTML = pauseSVG
+      flag = 1
+    }
+    else if(flag === 1) {
+      audio2.pause()
+      playBtn2.innerHTML = playSVG
+      flag = 0
+    }
+  })
+
   playBtn.addEventListener('click', function() {
     if(flag === 0) {
       audio.play()
@@ -387,7 +404,9 @@ let correctAnswer = () => {
 }
 
 let initCard = (current) => {
-  // let audio = document.createElement('audio')
+  playBtn2.innerHTML = playSVG
+  let audio = document.querySelector('.audio2')
+  audio.setAttribute('src', birdsData[level].filter(bird => bird.name === current)[0].audio);
   document.querySelector('.bird_head').style.display = "flex"
   document.querySelector('.init_text').style.display = "none"
   document.querySelectorAll('.name')[1].innerHTML = birdsData[level].filter(bird => bird.name === current)[0].name
@@ -436,9 +455,7 @@ listItems.forEach(li => {
 initLevel()
 
 document.querySelector('.next').addEventListener('click', function() {
-  // listItems.forEach(li => {
-  //   li.style.pointerEvents = "auto"
-  // })
+  playBtn.innerHTML = playSVG
   audioPlay = false
   mistake = 5
   level++
