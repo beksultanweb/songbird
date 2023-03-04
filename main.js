@@ -333,6 +333,22 @@ let initLevel = () => {
   let myAudio = document.querySelector('.audio1')
   myAudio.setAttribute('src', birdsData[level][randomNumber].audio); //Подставляет
 
+  let progress = document.querySelector('.progress')
+  let currentTime = 0, maxTime
+  myAudio.onloadedmetadata = function() {
+    maxTime = Math.floor(myAudio.duration)
+    let duration = document.querySelector('.duration')
+    let right = ''
+
+    right += '0' + Math.floor(myAudio.duration / 60) + ':'
+    if(Math.floor(myAudio.duration % 60) < 10) {
+      right += '0'
+    }
+    right += Math.floor(myAudio.duration % 60)
+
+    duration.innerHTML = right
+  }
+
   var playBtn = document.querySelector('.playBtn')
   var audio = document.querySelector('.audio1')
   var playBtn2 = document.querySelector('.playBtn2')
@@ -354,6 +370,21 @@ let initLevel = () => {
   })
 
   playBtn.addEventListener('click', function() {
+    id = setInterval(function(){
+        currentTime++
+        if(currentTime > maxTime){
+          clearInterval(id)
+        }
+        else{
+          let time = ''
+          time += '0' + Math.floor(currentTime / 60) + ':'
+          if(Math.floor(currentTime % 60) < 10) {
+            time += '0'
+          }
+          time += Math.floor(currentTime % 60)
+          progress.innerHTML = time.toString()
+        }
+    }, 1000)
     if(flag === 0) {
       audio.play()
       playBtn.innerHTML = pauseSVG
@@ -363,35 +394,8 @@ let initLevel = () => {
       audio.pause()
       playBtn.innerHTML = playSVG
       flag = 0
+      clearInterval(id)
     }
-  
-    let circle = document.querySelector('.circle')
-    let timeBar = document.querySelector('.time_bar').offsetWidth
-    let duration = document.querySelector('.duration')
-    let durTime = Math.floor(audio.duration)
-    
-  //   function progress(timeleft, timetotal, $element) {
-  //     var progressBarWidth = timeleft * $element.width() / timetotal;
-  //     $element.find('div').animate({ width: progressBarWidth }, 500).html(Math.floor(timeleft/60) + ":"+ timeleft%60);
-  //     if(timeleft > 0) {
-  //         setTimeout(function() {
-  //             progress(timeleft - 1, timetotal, $element);
-  //         }, 1000);
-  //     }
-  // };
-  
-  // progress(60, 60, $('#progressBar'));
-  
-    let res = ''
-  
-    res += '0' + Math.floor(audio.duration / 60) + ':'
-  
-    if(Math.floor(audio.duration % 60) < 10) {
-      res += '0'
-    }
-    res += Math.floor(audio.duration % 60)
-  
-    duration.innerHTML = res
   })
   listItems.forEach(li => li.style.setProperty('--background', '#444444')) //
 }
@@ -457,6 +461,7 @@ initLevel()
 document.querySelector('.next').addEventListener('click', function() {
   playBtn.innerHTML = playSVG
   audioPlay = false
+  document.querySelector('.audio2').pause()
   mistake = 5
   level++
   if(level === 3) gameEnd()
