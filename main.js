@@ -370,10 +370,19 @@ let initLevel = () => {
   })
 
   playBtn.addEventListener('click', function() {
-    id = setInterval(function(){
+    let width = document.querySelectorAll('.time_bar')[0].offsetWidth
+    var circle = document.querySelector('.circle')
+    let playBar = document.querySelector('.play_bar')
+
+    if(flag === 0) {
+      timerId = setInterval(function(){
         currentTime++
-        if(currentTime > maxTime){
-          clearInterval(id)
+        let podchet = width / myAudio.duration * currentTime
+        playBar.style.display = "block"
+        playBar.style.width = podchet + 'px'
+        circle.style.left = podchet + 'px'
+        if(currentTime === maxTime){
+          clearInterval(timerId)
         }
         else{
           let time = ''
@@ -385,16 +394,15 @@ let initLevel = () => {
           progress.innerHTML = time.toString()
         }
     }, 1000)
-    if(flag === 0) {
       audio.play()
       playBtn.innerHTML = pauseSVG
       flag = 1
     }
     else if(flag === 1) {
+      clearInterval(timerId)
       audio.pause()
       playBtn.innerHTML = playSVG
       flag = 0
-      clearInterval(id)
     }
   })
   listItems.forEach(li => li.style.setProperty('--background', '#444444')) //
